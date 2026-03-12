@@ -7,6 +7,7 @@
 import { login, register } from "./auth.js"
 import { produceWood, produceStone, makePlanks } from "./production.js"
 import { sellItem, loadMarket, collectPendingPayments } from "./market.js"
+import { initNpcMarket, sellToNpcMarket } from "./npcMarket.js"
 import { changeUsername } from "./user.js"
 import { updateUI, showMessage } from "./ui.js"
 
@@ -80,6 +81,8 @@ async function startGame(){
   if (collected > 0) {
     showMessage(`You received $${collected} from sold market listings.`, "info")
   }
+
+  await initNpcMarket()
   loadMarket()
 }
 
@@ -169,6 +172,7 @@ document.getElementById("plankBtn").addEventListener("click", function() {
 });
 
 document.getElementById("sellBtn").addEventListener("click",sellItem)
+document.getElementById("sellNpcBtn").addEventListener("click",sellToNpcMarket)
 
 // user/settings listeners
 const settingsBtn = document.getElementById("settingsBtn");

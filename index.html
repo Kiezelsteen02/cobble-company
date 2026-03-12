@@ -37,6 +37,8 @@
 <div id="game" style="display:none">
   <!-- game area: hidden until the user logs in -->
 
+<div class="top-row">
+
 <div class="card">
 
 <h2>Company</h2>
@@ -44,6 +46,21 @@
 <p>Player: <span id="player"></span></p>
 <p>Money: $<span id="money"></span></p>
 <button id="storageBtn">Storage</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>NPC Market</h2>
+
+<p>Guaranteed buyers (prices update every 15 minutes):</p>
+<p>Next update in: <span id="npcCountdown">15:00</span></p>
+<p>🌲 Wood: $<span id="npcWoodPrice">4.00</span></p>
+<p>🪨 Stone: $<span id="npcStonePrice">6.00</span></p>
+<p>📦 Planks: $<span id="npcPlanksPrice">15.00</span></p>
+
+</div>
 
 </div>
 
@@ -92,10 +109,9 @@
 <input id="sellPrice" type="number" placeholder="price per item">
 
 <button id="sellBtn">Place on the Market</button>
+<button id="sellNpcBtn">Sell to NPC Market</button>
 
 </div>
-
-
 <div class="card">
 
 <h2>World Market</h2>

@@ -51,6 +51,8 @@ body{font-family:Arial;background:#121212;color:white;margin:0;padding:20px}
 .container{max-width:1000px;margin:auto;position:relative}
 h1{margin-bottom:10px}
 .card{background:#1e1e1e;padding:15px;margin-bottom:15px;border-radius:12px}
+.top-row{display:flex;gap:15px;align-items:stretch;flex-wrap:wrap}
+.top-row>.card{flex:1;min-width:280px}
 button{padding:8px 12px;border:none;border-radius:6px;background:#3fb950;color:white;cursor:pointer}
 button.busy {
 	background: #888;
@@ -181,3 +183,19 @@ button.cancel-btn:hover{background:#e74c3c}
 
 .game-message.error{border-left-color:#e74c3c}
 .game-message.info{border-left-color:#3fb950}
+
+#npcCountdown{
+  font-weight:700;
+}
+
+#npcCountdown.countdown-normal{
+  color:#ffffff;
+}
+
+#npcCountdown.countdown-warning{
+  color:#ff9800;
+}
+
+#npcCountdown.countdown-danger{
+  color:#e74c3c;
+}
