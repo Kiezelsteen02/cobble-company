@@ -6,6 +6,12 @@
 import { getUser, updateUser } from "./user.js"
 import { updateUI } from "./ui.js"
 
+// maximum total resources allowed in storage
+const STORAGE_LIMIT = 250;
+function total(u) {
+  return (u.wood||0) + (u.stone||0) + (u.planks||0);
+}
+
 /**
  * Give the player one unit of wood and save immediately.
  */
@@ -16,7 +22,11 @@ export async function produceWood(){
 		alert("Unable to produce wood: could not load your data. Check permissions or login again.");
 		return;
 	}
-	u.wood++;
+	if (total(u) >= STORAGE_LIMIT) {
+		alert("Storage is full (" + STORAGE_LIMIT + " resources). Sell or use something first.");
+		return;
+	}
+	u.wood = (u.wood||0) + 1;
 	await updateUser(u);
 	updateUI();
 }
@@ -31,7 +41,11 @@ export async function produceStone(){
 		alert("Unable to mine stone: could not load your data. Check permissions or login again.");
 		return;
 	}
-	u.stone++;
+	if (total(u) >= STORAGE_LIMIT) {
+		alert("Storage is full (" + STORAGE_LIMIT + " resources). Sell or use something first.");
+		return;
+	}
+	u.stone = (u.stone||0) + 1;
 	await updateUser(u);
 	updateUI();
 }
@@ -46,8 +60,12 @@ export async function makePlanks(){
 		return;
 	}
 	if(u.wood < 3) return alert("Niet genoeg hout");
+	if (total(u) >= STORAGE_LIMIT) {
+		alert("Storage is full (" + STORAGE_LIMIT + " resources). Sell or use something first.");
+		return;
+	}
 	u.wood -= 3;
-	u.planks++;
+	u.planks = (u.planks||0) + 1;
 	await updateUser(u);
 	updateUI();
 }

@@ -43,6 +43,7 @@
 
 <p>Player: <span id="player"></span></p>
 <p>Money: $<span id="money"></span></p>
+<button id="storageBtn">Storage</button>
 
 </div>
 
@@ -138,6 +139,17 @@
     <input id="newUsername" placeholder="new name">
     <button id="changeNameBtn">Change Name</button>
   </div>
+</div>
+
+<!-- overlay + storage panel (appears on top of page) -->
+<div id="storageOverlay" style="display:none;"></div>
+<div id="storagePanel" class="card" style="display:none;">
+  <button id="closeStorageBtn" title="Close">✖️</button>
+  <h2>Storage</h2>
+  <p>🌲 Wood: <span id="storageWood">0</span></p>
+  <p>🪨 Stone: <span id="storageStone">0</span></p>
+  <p>📦 Planks: <span id="storagePlanks">0</span></p>
+  <p>Total: <span id="storageTotal">0</span>/250</p>
 </div>
 
 </div>

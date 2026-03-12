@@ -25,11 +25,58 @@ async function startGame(){
   const panel = document.getElementById("settingsPanel");
   if(panel) panel.style.display = "none";
 
+  // ensure storage button is shown and panel hidden as well
+  const storageBtn = document.getElementById("storageBtn");
+  if (storageBtn) storageBtn.style.display = "block";
+  const storagePanel = document.getElementById("storagePanel");
+  if (storagePanel) storagePanel.style.display = "none";
+
   // attach change-name listener now that currentUser is guaranteed
   const changeBtn = document.getElementById("changeNameBtn");
   if (changeBtn) {
     console.log("attaching changeNameBtn listener");
     changeBtn.addEventListener("click", changeUsername);
+  }
+
+  // wire storage panel toggles
+  if (storageBtn) {
+    storageBtn.addEventListener("click", () => {
+      // copy current resource values & show panel + overlay
+      document.getElementById("storageWood").textContent =
+        document.getElementById("wood").textContent;
+      document.getElementById("storageStone").textContent =
+        document.getElementById("stone").textContent;
+      document.getElementById("storagePlanks").textContent =
+        document.getElementById("planks").textContent;
+      document.getElementById("storageTotal").textContent =
+        Number(document.getElementById("wood").textContent || 0) +
+        Number(document.getElementById("stone").textContent || 0) +
+        Number(document.getElementById("planks").textContent || 0);
+
+      const panel = document.getElementById("storagePanel");
+      if (panel) panel.style.display = "block";
+      const overlay = document.getElementById("storageOverlay");
+      if (overlay) overlay.style.display = "block";
+    });
+  }
+  const closeStorageBtn = document.getElementById("closeStorageBtn");
+  if (closeStorageBtn) {
+    closeStorageBtn.addEventListener("click", () => {
+      const panel = document.getElementById("storagePanel");
+      if (panel) panel.style.display = "none";
+      const overlay = document.getElementById("storageOverlay");
+      if (overlay) overlay.style.display = "none";
+    });
+  }
+
+  // clicking overlay also closes the panel
+  const overlayEl = document.getElementById("storageOverlay");
+  if (overlayEl) {
+    overlayEl.addEventListener("click", () => {
+      const panel = document.getElementById("storagePanel");
+      if (panel) panel.style.display = "none";
+      overlayEl.style.display = "none";
+    });
   }
 
   // update UI with user data; catch permission errors so the page still
