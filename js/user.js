@@ -1,6 +1,6 @@
 import { db } from "./firebase.js"
 import { currentUser } from "./auth.js"
-import { updateUI } from "./ui.js"
+import { updateUI, showMessage } from "./ui.js"
 
 import {
 doc,
@@ -50,15 +50,15 @@ export async function changeUsername(){
     console.log("changeUsername called");
     // give immediate visual feedback so user knows the button worked
     let newName = document.getElementById("newUsername").value
-    alert("Attempting to change name to: " + newName);
+    showMessage("Attempting to change name to: " + newName, "info");
 
 if(newName.length < 3){
-alert("Naam te kort")
+showMessage("Naam te kort", "error")
 return
 }
 
 if(newName.length > 16){
-alert("Naam te lang")
+showMessage("Naam te lang", "error")
 return
 }
 
@@ -75,12 +75,12 @@ try {
 } catch (err) {
   console.error("username uniqueness check failed", err)
   // permission denied here means Firestore rules don't allow listing
-  alert("Kan huidige gebruikers niet controleren. Zorg dat Firestore-regels lezen toelaten of verwijder de duplicatiecontrole.")
+  showMessage("Kan huidige gebruikers niet controleren. Zorg dat Firestore-regels lezen toelaten of verwijder de duplicatiecontrole.", "error")
 }
 
 if (querySnapshot && !querySnapshot.empty){
   if (!(querySnapshot.size === 1 && querySnapshot.docs[0].id === currentUser)) {
-    alert("Naam bestaat al")
+    showMessage("Naam bestaat al", "error")
     return
   }
 }
@@ -89,7 +89,7 @@ if (querySnapshot && !querySnapshot.empty){
 
 let u = await getUser()
 if (!u) {
-  alert("Kon gebruiker niet laden – probeer opnieuw inloggen");
+  showMessage("Kon gebruiker niet laden – probeer opnieuw inloggen", "error");
   return
 }
 
@@ -102,11 +102,11 @@ try {
   console.log("updateUser wrote", u);
 } catch (err) {
   console.error("updateUser failed", err);
-  alert("Kon naam niet opslaan: " + err.message);
+  showMessage("Kon naam niet opslaan: " + err.message, "error");
   return;
 }
 
-alert("Naam aangepast")
+showMessage("Naam aangepast", "info")
 updateUI()
 // also update the player span directly, in case updateUI didn't pick
 // up the new value immediately
@@ -130,6 +130,6 @@ if(panel) panel.style.display = "none";
 document.getElementById("newUsername").value = "";
   } catch (err) {
     console.error("unexpected error in changeUsername", err);
-    alert("Fout bij naam veranderen: " + err.message);
+    showMessage("Fout bij naam veranderen: " + err.message, "error");
   }
 }

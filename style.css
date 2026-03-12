@@ -71,6 +71,8 @@ button.busy {
 	}
 input,select{padding:6px;margin:4px;border-radius:6px;border:none}
 .market-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #333}
+button.cancel-btn{background:#c0392b}
+button.cancel-btn:hover{background:#e74c3c}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .resource{background:#2a2a2a;padding:10px;border-radius:8px}
 
@@ -144,3 +146,38 @@ input,select{padding:6px;margin:4px;border-radius:6px;border:none}
   font-size:1.2em;
   cursor:pointer;
 }
+
+/* bottom-right in-game messages */
+#gameMessages{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:8px;
+  z-index:120;
+  pointer-events:none;
+}
+
+.game-message{
+  min-width:220px;
+  max-width:360px;
+  background:#2a2a2a;
+  color:#fff;
+  border-left:4px solid #3fb950;
+  border-radius:8px;
+  padding:10px 12px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.35);
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity 0.2s ease, transform 0.2s ease;
+}
+
+.game-message.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.game-message.error{border-left-color:#e74c3c}
+.game-message.info{border-left-color:#3fb950}

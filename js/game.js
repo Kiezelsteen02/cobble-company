@@ -6,9 +6,9 @@
 
 import { login, register } from "./auth.js"
 import { produceWood, produceStone, makePlanks } from "./production.js"
-import { sellItem, loadMarket } from "./market.js"
+import { sellItem, loadMarket, collectPendingPayments } from "./market.js"
 import { changeUsername } from "./user.js"
-import { updateUI } from "./ui.js"
+import { updateUI, showMessage } from "./ui.js"
 
 /**
  * Called after a successful login/registration.  Hides the auth panel,
@@ -87,6 +87,10 @@ async function startGame(){
     console.error("Failed to update UI:", err);
   }
 
+  const collected = await collectPendingPayments()
+  if (collected > 0) {
+    showMessage(`You received $${collected} from sold market listings.`, "info")
+  }
   loadMarket()
 }
 

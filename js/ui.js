@@ -5,6 +5,41 @@
 
 import { getUser } from "./user.js"
 
+let messageContainer = null
+
+function ensureMessageContainer(){
+  if (messageContainer) return messageContainer
+
+  messageContainer = document.createElement("div")
+  messageContainer.id = "gameMessages"
+  document.body.appendChild(messageContainer)
+
+  return messageContainer
+}
+
+export function showMessage(text, type = "info"){
+  const container = ensureMessageContainer()
+
+  const el = document.createElement("div")
+  el.className = `game-message ${type}`
+  el.textContent = text
+
+  container.appendChild(el)
+
+  requestAnimationFrame(() => {
+    el.classList.add("show")
+  })
+
+  setTimeout(() => {
+    el.classList.remove("show")
+    setTimeout(() => {
+      if (el.parentNode) {
+        el.parentNode.removeChild(el)
+      }
+    }, 220)
+  }, 3200)
+}
+
 export async function updateUI(){
   let u = await getUser()
   if(!u) return
