@@ -1,0 +1,110 @@
+/*
+  style.css
+  -------
+  Basic styling for the Cobble Company UI.  Cards, buttons, tooltips,
+  layout, and the settings panel are all defined here.
+*/
+
+/* Tooltip styles */
+.tooltip {
+	visibility: hidden;
+	background: #222;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 6px 10px;
+	position: absolute;
+	z-index: 1;
+	bottom: 120%;
+	left: 50%;
+	transform: translateX(-50%);
+	opacity: 0;
+	transition: opacity 0.2s;
+	font-size: 0.95em;
+	pointer-events: none;
+}
+.production-item {
+	position: relative;
+}
+.production-item:hover .tooltip {
+	visibility: visible;
+	opacity: 1;
+}
+/* Production section layout */
+.production-row {
+	display: flex;
+	gap: 20px;
+	justify-content: flex-start;
+	margin-bottom: 10px;
+}
+.production-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.production-label {
+	font-weight: bold;
+	margin-bottom: 6px;
+	color: #fff;
+}
+body{font-family:Arial;background:#121212;color:white;margin:0;padding:20px}
+.container{max-width:1000px;margin:auto;position:relative}
+h1{margin-bottom:10px}
+.card{background:#1e1e1e;padding:15px;margin-bottom:15px;border-radius:12px}
+button{padding:8px 12px;border:none;border-radius:6px;background:#3fb950;color:white;cursor:pointer}
+button.busy {
+	background: #888;
+	color: transparent;
+	cursor: not-allowed;
+	border: 2px solid #ff9800;
+	position: relative;
+	}
+	.countdown {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		font-weight: bold;
+		font-size: 1.1em;
+		color: #fff;
+		pointer-events: none;
+	}
+input,select{padding:6px;margin:4px;border-radius:6px;border:none}
+.market-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #333}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.resource{background:#2a2a2a;padding:10px;border-radius:8px}
+
+/* settings button and panel */
+#settingsBtn{
+  display:none; /* only visible once game loads */
+  position:absolute;
+  top:20px;
+  right:20px;
+  background:transparent;
+  font-size:1.5em;
+  border:none;
+  color:white;
+  cursor:pointer;
+}
+#settingsPanel{
+  display:none;
+  position:absolute;
+  top:60px;
+  right:20px;
+  width:240px;
+  background:#1e1e1e;
+  padding:15px;
+  border-radius:12px;
+  z-index:100;
+}
+#settingsPanel h2{margin-top:0;}
+#settingsPanel #closeSettingsBtn{
+  position:absolute;
+  top:5px;
+  right:5px;
+  background:transparent;
+  border:none;
+  color:#fff;
+  font-size:1.2em;
+  cursor:pointer;
+}

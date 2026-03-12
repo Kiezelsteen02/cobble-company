@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+<meta charset="UTF-8">
+<title>Cobble Company</title>
+
+<!-- simple blank favicon prevents 404s -->
+<link rel="icon" href="data:;base64,=">
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!--
+  Main page container.  The app starts with the #auth panel visible.
+  After login/register we hide #auth and show #game (see game.js).
+-->
+<h1>Cobble Company</h1>
+
+<!-- settings button appears once the game has started -->
+<button id="settingsBtn" title="Settings">⚙️</button>
+
+<div id="auth" class="card">
+  <!-- login / registration form -->
+  <h2>Account</h2>
+  <input id="email" placeholder="email">
+  <input id="password" type="password" placeholder="wachtwoord">
+  <button id="loginBtn">Login</button>
+  <button id="registerBtn">Register</button>
+</div>
+
+
+<div id="game" style="display:none">
+  <!-- game area: hidden until the user logs in -->
+
+<div class="card">
+
+<h2>Company</h2>
+
+<p>Player: <span id="player"></span></p>
+<p>Money: $<span id="money"></span></p>
+
+</div>
+
+
+<div class="card">
+
+<h2>Resources</h2>
+
+<div class="row">
+
+<div class="resource">
+🌲 Wood: <span id="wood"></span>
+</div>
+
+<div class="resource">
+🪨 Stone: <span id="stone"></span>
+</div>
+
+<div class="resource">
+📦 Planks: <span id="planks"></span>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Production</h2>
+
+<div class="production-row">
+	<div class="production-item">
+		<div class="production-label">Wood</div>
+		<button id="woodBtn">Chop
+			<div class="tooltip">Time: 3s<br>Materials: None</div>
+		</button>
+	</div>
+	<div class="production-item">
+		<div class="production-label">Stone</div>
+		<button id="stoneBtn">Mine
+			<div class="tooltip">Time: 5s<br>Materials: None</div>
+		</button>
+	</div>
+	<div class="production-item">
+		<div class="production-label">Planks</div>
+		<button id="plankBtn">Craft
+			<div class="tooltip">Time: 12s<br>Materials: 3 Wood</div>
+		</button>
+	</div>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Sell item</h2>
+
+<select id="sellItem">
+
+<option value="wood">Wood</option>
+<option value="stone">Stone</option>
+<option value="planks">Planks</option>
+
+</select>
+
+<input id="sellAmount" type="number" placeholder="amount">
+<input id="sellPrice" type="number" placeholder="price per item">
+
+<button id="sellBtn">Place on the Market</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>World Market</h2>
+
+<div id="market"></div>
+
+</div>
+
+
+<!-- settings panel (hidden until user clicks the gear)
+     contains options that are not part of the main game flow.
+-->
+<div id="settingsPanel" class="card" style="display:none;">
+  <button id="closeSettingsBtn" title="Close">✖️</button>
+  <h2>Settings</h2>
+  <div class="card">
+    <h3>Change Name</h3>
+    <input id="newUsername" placeholder="new name">
+    <button id="changeNameBtn">Change Name</button>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+
+<script type="module" src="js/game.js"></script>
+
+</body>
+
+</html>
