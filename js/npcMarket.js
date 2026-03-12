@@ -259,7 +259,7 @@ async function syncNpcPrices(){
   }
 
   isSyncing = false
-  renderNpcCountdown()
+  renderNpcPrices()
 }
 
 async function loadMissingPrice(item){
