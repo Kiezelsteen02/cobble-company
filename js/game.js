@@ -10,7 +10,8 @@ import { sellItem, loadMarket, collectPendingPayments } from "./market.js"
 import { initNpcMarket, sellToNpcMarket, toggleNpcHistory } from "./npcMarket.js"
 import { initTransactionsUI, toggleTransactionsPanel } from "./transactions.js"
 import { changeUsername } from "./user.js"
-import { updateUI, showMessage } from "./ui.js"
+import { updateUI, showMessage, formatMoney } from "./ui.js"
+import { initCityMap, startCityMapProduction } from "./cityMap.js"
 
 /**
  * Called after a successful login/registration.  Hides the auth panel,
@@ -86,11 +87,13 @@ async function startGame(){
 
   const collected = await collectPendingPayments()
   if (collected > 0) {
-    showMessage(`You received $${collected} from sold market listings.`, "info")
+    showMessage(`You received $${formatMoney(collected)} from sold market listings.`, "info")
   }
 
   await initNpcMarket()
   initTransactionsUI()
+  await initCityMap()
+  startCityMapProduction()
   loadMarket()
 }
 
@@ -183,6 +186,19 @@ document.getElementById("sellBtn").addEventListener("click",sellItem)
 document.getElementById("sellNpcBtn").addEventListener("click",sellToNpcMarket)
 document.getElementById("npcHistoryBtn").addEventListener("click",toggleNpcHistory)
 document.getElementById("transactionsBtn").addEventListener("click",toggleTransactionsPanel)
+
+const sellPriceInput = document.getElementById("sellPrice")
+if (sellPriceInput) {
+  sellPriceInput.addEventListener("blur", () => {
+    const raw = sellPriceInput.value.trim()
+    if (!raw) return
+
+    const numeric = Number(raw)
+    if (!Number.isFinite(numeric)) return
+
+    sellPriceInput.value = numeric.toFixed(2)
+  })
+}
 
 // user/settings listeners
 const settingsBtn = document.getElementById("settingsBtn");

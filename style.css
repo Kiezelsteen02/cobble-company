@@ -47,13 +47,80 @@
 	margin-bottom: 6px;
 	color: #fff;
 }
+.city-map-grid{
+  display:grid;
+  grid-template-columns:repeat(10, minmax(0, 1fr));
+  gap:4px;
+  max-width:520px;
+}
+.city-map-controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:8px;
+}
+.city-map-help{
+  margin:0 0 10px 0;
+  color:#ccc;
+  font-size:0.92em;
+}
+.city-map-tile{
+  aspect-ratio:1 / 1;
+  background:#2a2a2a;
+  border:1px solid #3a3a3a;
+  border-radius:4px;
+  padding:0;
+  font-size:1.05em;
+  color:#ffffff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.city-map-tile.tile-empty{
+  background:#2a2a2a;
+}
+.city-map-tile.tile-road{
+  background:
+    linear-gradient(90deg, #343a44 0%, #343a44 100%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 8px,
+      #c9c9c9 8px,
+      #c9c9c9 10px
+    );
+  border-color:#6b7280;
+  color:#d1d5db;
+  cursor:not-allowed;
+}
+.city-map-tile.tile-forest{
+  background:#1f3a24;
+  border-color:#2f5a38;
+}
+.city-map-tile.tile-mine{
+  background:#30343a;
+  border-color:#4b5563;
+}
+.city-map-tile.tile-sawmill{
+  background:#3a2f24;
+  border-color:#6a4d2f;
+}
+.city-map-tile.tile-own{
+  box-shadow:0 0 0 2px #3fb950 inset;
+  transform:scale(1.02);
+}
+.city-map-tile.tile-other{
+  opacity:0.72;
+  filter:saturate(0.7);
+}
 body{font-family:Arial;background:#121212;color:white;margin:0;padding:20px}
 .container{max-width:1000px;margin:auto;position:relative}
 h1{margin-bottom:10px}
 .card{background:#1e1e1e;padding:15px;margin-bottom:15px;border-radius:12px}
 .top-row{display:flex;gap:15px;align-items:stretch;flex-wrap:wrap}
 .top-row>.card{flex:1;min-width:280px}
-button{padding:8px 12px;border:none;border-radius:6px;background:#3fb950;color:white;cursor:pointer}
+#versionLabel{position:fixed;top:10px;right:14px;color:#555;font-size:12px;pointer-events:none;z-index:9999}
+button:not(.city-map-tile){padding:8px 12px;border:none;border-radius:6px;background:#3fb950;color:white;cursor:pointer}
 #transactionsBtn{margin-top:8px}
 button.busy {
 	background: #888;

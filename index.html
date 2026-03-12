@@ -13,6 +13,12 @@
 
 <body>
 
+<!-- ============================================================ -->
+<!--  GAME VERSION — update this when releasing a new version    -->
+<!-- ============================================================ -->
+<div id="versionLabel">V0.0.5</div>
+<!-- ============================================================ -->
+
 <div class="container">
 
 <!--
@@ -50,24 +56,26 @@
 
 </div>
 
+</div>
+
 
 <div class="card">
 
-<h2>NPC Market</h2>
+<h2>City Map</h2>
 
-<p>Guaranteed buyers (prices update every 15 minutes):</p>
-<p>Next update in: <span id="npcCountdown">15:00</span></p>
-<p>🌲 Wood: $<span id="npcWoodPrice">4.00</span></p>
-<p>🪨 Stone: $<span id="npcStonePrice">6.00</span></p>
-<p>📦 Planks: $<span id="npcPlanksPrice">15.00</span></p>
-<button id="npcHistoryBtn">History</button>
-
-<div id="npcHistoryPanel" style="display:none; margin-top:10px;">
-  <h3>Last 24 hours</h3>
-  <div id="npcHistoryBody">No history loaded.</div>
+<div class="city-map-controls">
+  <label for="buildingType">Build:</label>
+  <select id="buildingType">
+    <option value="forest">Forest ($75.00, max 2)</option>
+    <option value="mine">Mine ($120.00, max 2)</option>
+    <option value="sawmill">Sawmill ($350.00, max 1)</option>
+    <option value="delete">Delete building</option>
+  </select>
 </div>
 
-</div>
+<p class="city-map-help">Shared multiplayer map: select a building type, then click a cell to build or delete your own buildings. Roads are generated automatically and cannot be built on.</p>
+
+<div id="cityMapGrid" class="city-map-grid"></div>
 
 </div>
 
@@ -119,11 +127,34 @@
 <button id="sellNpcBtn">Sell to NPC Market</button>
 
 </div>
+
+<div class="top-row">
+
+<div class="card">
+
+<h2>NPC Market</h2>
+
+<p>Guaranteed buyers (prices update every 15 minutes):</p>
+<p>Next update in: <span id="npcCountdown">15:00</span></p>
+<p>🌲 Wood: $<span id="npcWoodPrice">4.00</span></p>
+<p>🪨 Stone: $<span id="npcStonePrice">6.00</span></p>
+<p>📦 Planks: $<span id="npcPlanksPrice">15.00</span></p>
+<button id="npcHistoryBtn">History</button>
+
+<div id="npcHistoryPanel" style="display:none; margin-top:10px;">
+  <h3>Last 24 hours</h3>
+  <div id="npcHistoryBody">No history loaded.</div>
+</div>
+
+</div>
+
 <div class="card">
 
 <h2>World Market</h2>
 
 <div id="market"></div>
+
+</div>
 
 </div>
 

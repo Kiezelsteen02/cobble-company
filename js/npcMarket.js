@@ -41,6 +41,7 @@ let npcUnsubscribe = null
 let npcTickerId = null
 let isSyncing = false
 let isHistoryLoading = false
+let lastSyncedBoundaryMs = 0
 
 function round2(value){
   return Number(value.toFixed(2))
@@ -71,6 +72,10 @@ function randomFactor(){
   return 1 + ((Math.random() * 2 - 1) * MAX_PERCENT_CHANGE)
 }
 
+function floorToQuarterHour(ms){
+  return Math.floor(ms / UPDATE_INTERVAL_MS) * UPDATE_INTERVAL_MS
+}
+
 function getLastUpdateMs(data){
   if (!data || !data.lastUpdate) return 0
 
@@ -96,18 +101,9 @@ function renderNpcPrices(){
 
 function getNextRemainingMs(){
   const now = Date.now()
-  let remaining = Infinity
-
-  for (const item of ITEM_ORDER) {
-    const last = npcLastUpdates[item] || 0
-    if (!last) return 0
-
-    const itemRemaining = Math.max(0, UPDATE_INTERVAL_MS - (now - last))
-    remaining = Math.min(remaining, itemRemaining)
-  }
-
-  if (!Number.isFinite(remaining)) return 0
-  return remaining
+  const currentBoundary = floorToQuarterHour(now)
+  const nextBoundary = currentBoundary + UPDATE_INTERVAL_MS
+  return Math.max(0, nextBoundary - now)
 }
 
 function renderNpcCountdown(){
@@ -130,51 +126,60 @@ function renderNpcCountdown(){
 
 async function maybeUpdateItemPrice(item){
   const ref = doc(db, "npc_market", item)
-  const historyRef = doc(collection(db, "npc_market_history"))
 
   const result = await runTransaction(db, async (tx) => {
     const snap = await tx.get(ref)
     const now = Date.now()
+    const currentBoundary = floorToQuarterHour(now)
 
     if (!snap.exists()) {
       const initialPrice = round2(BASE_PRICES[item])
       tx.set(ref, {
         price: initialPrice,
-        lastUpdate: now
+        lastUpdate: currentBoundary
       })
 
+      const historyRef = doc(collection(db, "npc_market_history"))
       tx.set(historyRef, {
         item,
         price: initialPrice,
-        timestamp: now
+        timestamp: currentBoundary
       })
 
-      return { lastUpdate: now, price: initialPrice }
+      return { lastUpdate: currentBoundary, price: initialPrice }
     }
 
     const data = snap.data()
-    const lastUpdateMs = getLastUpdateMs(data)
+    const rawLastUpdateMs = getLastUpdateMs(data)
+    const lastUpdateMs = rawLastUpdateMs > 0 ? floorToQuarterHour(rawLastUpdateMs) : currentBoundary
     const currentPrice = Number(data.price ?? BASE_PRICES[item])
 
-    if ((now - lastUpdateMs) < UPDATE_INTERVAL_MS) {
+    if (lastUpdateMs >= currentBoundary) {
       return { lastUpdate: lastUpdateMs, price: currentPrice }
     }
 
-    let nextPrice = round2(currentPrice * randomFactor())
-    if (nextPrice < 0.01) nextPrice = 0.01
+    let nextPrice = currentPrice
+    let stepTime = lastUpdateMs
+
+    while (stepTime < currentBoundary) {
+      stepTime += UPDATE_INTERVAL_MS
+      nextPrice = round2(nextPrice * randomFactor())
+      if (nextPrice < 0.01) nextPrice = 0.01
+
+      const historyRef = doc(collection(db, "npc_market_history"))
+      tx.set(historyRef, {
+        item,
+        price: nextPrice,
+        timestamp: stepTime
+      })
+    }
 
     tx.set(ref, {
       price: nextPrice,
-      lastUpdate: now
+      lastUpdate: currentBoundary
     }, { merge: true })
 
-    tx.set(historyRef, {
-      item,
-      price: nextPrice,
-      timestamp: now
-    })
-
-    return { lastUpdate: now, price: nextPrice }
+    return { lastUpdate: currentBoundary, price: nextPrice }
   })
 
   if (result) {
@@ -259,7 +264,13 @@ async function syncNpcPrices(){
   }
 
   isSyncing = false
+  lastSyncedBoundaryMs = floorToQuarterHour(Date.now())
   renderNpcPrices()
+
+  const panel = document.getElementById("npcHistoryPanel")
+  if (panel && panel.style.display === "block") {
+    await renderNpcHistory24h()
+  }
 }
 
 async function loadMissingPrice(item){
@@ -308,7 +319,8 @@ export async function initNpcMarket(){
     npcTickerId = setInterval(() => {
       renderNpcCountdown()
 
-      if (getNextRemainingMs() <= 0) {
+      const currentBoundary = floorToQuarterHour(Date.now())
+      if (currentBoundary > lastSyncedBoundaryMs) {
         syncNpcPrices()
       }
     }, 1000)

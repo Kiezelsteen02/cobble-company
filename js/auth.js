@@ -36,7 +36,13 @@ export async function register(){
     money:100,
     wood:0,
     stone:0,
-    planks:0
+    planks:0,
+    cityMap:Array(100).fill(null),
+    mapBuildingCounts:{
+      forest:0,
+      mine:0,
+      sawmill:0
+    }
   })
 }
 

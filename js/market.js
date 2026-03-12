@@ -9,7 +9,7 @@
 
 import { db } from "./firebase.js"
 import { getUser, updateUser } from "./user.js"
-import { updateUI, showMessage } from "./ui.js"
+import { updateUI, showMessage, formatMoney } from "./ui.js"
 import { logTransaction } from "./transactions.js"
 import { currentUser } from "./auth.js"
 
@@ -69,7 +69,7 @@ export async function sellItem() {
     resource: item,
     amount: -amount,
     moneyChange: 0,
-    note: `Placed listing at $${price} each`
+    note: `Placed listing at $${formatMoney(price)} each`
   })
 }
 
@@ -114,7 +114,7 @@ export async function buy(id, data) {
 
   const buyerRef = doc(db, "users", currentUser)
   const marketRef = doc(db, "market", id)
-  const total = data.amount * data.price
+  const total = Number((data.amount * data.price).toFixed(2))
 
   try {
     await runTransaction(db, async (tx) => {
@@ -134,14 +134,14 @@ export async function buy(id, data) {
       }
 
       const buyer = buyerSnap.data()
-      const total = listing.amount * listing.price
+      const total = Number((listing.amount * listing.price).toFixed(2))
 
       if ((buyer.money || 0) < total) {
-        throw new Error(`Not enough money. You need $${total} but only have $${buyer.money || 0}.`)
+        throw new Error(`Not enough money. You need $${formatMoney(total)} but only have $${formatMoney(buyer.money || 0)}.`)
       }
 
       tx.set(buyerRef, {
-        money: (buyer.money || 0) - total,
+        money: Number(((buyer.money || 0) - total).toFixed(2)),
         [listing.item]: (buyer[listing.item] || 0) + listing.amount
       }, { merge: true })
 
@@ -166,7 +166,7 @@ export async function buy(id, data) {
     resource: data.item,
     amount: data.amount,
     moneyChange: -total,
-    note: `Bought from player market at $${data.price} each`
+    note: `Bought from player market at $${formatMoney(data.price)} each`
   })
 
   showMessage(`Purchase complete: ${data.amount} ${data.item} bought.`, "info")
@@ -200,8 +200,8 @@ export async function collectPendingPayments() {
 
   for (const d of snap.docs) {
     const amount = d.data().amount || 0
-    collected += amount
-    u.money += amount
+    collected = Number((collected + amount).toFixed(2))
+    u.money = Number(((u.money || 0) + amount).toFixed(2))
     await deleteDoc(doc(db, "pendingPayments", d.id))
   }
 
@@ -242,7 +242,7 @@ export function loadMarket() {
         const o     = d.data()
         const isOwn = o.sellerUID === currentUser
         const icon  = ITEM_ICON[o.item] || ""
-        const total = o.amount * o.price
+        const total = Number((o.amount * o.price).toFixed(2))
 
         const el = document.createElement("div")
         el.className = "market-item"
@@ -263,7 +263,7 @@ export function loadMarket() {
           el.appendChild(cancelBtn)
         } else {
           const buyBtn = document.createElement("button")
-          buyBtn.textContent = `Buy ($${total})`
+          buyBtn.textContent = `Buy ($${formatMoney(total)})`
           buyBtn.onclick = async () => {
             if (buyBtn.disabled) return
             buyBtn.disabled = true
@@ -271,7 +271,7 @@ export function loadMarket() {
             await buy(d.id, o)
             if (document.body.contains(buyBtn)) {
               buyBtn.disabled = false
-              buyBtn.textContent = `Buy ($${total})`
+              buyBtn.textContent = `Buy ($${formatMoney(total)})`
             }
           }
           el.appendChild(buyBtn)

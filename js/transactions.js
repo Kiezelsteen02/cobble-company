@@ -32,10 +32,12 @@ function formatDate(ms){
   return `${dd}/${mm} ${hh}:${mi}`
 }
 
-function formatSignedNumber(value){
+function formatSignedNumber(value, decimals = 0){
   const n = Number(value || 0)
-  if (n > 0) return `+${n}`
-  return `${n}`
+  const absText = Math.abs(n).toFixed(decimals)
+  if (n > 0) return `+${absText}`
+  if (n < 0) return `-${absText}`
+  return decimals > 0 ? `0.${"0".repeat(decimals)}` : "0"
 }
 
 function renderTransactions(items){
@@ -52,7 +54,7 @@ function renderTransactions(items){
     const money = Number(x.moneyChange || 0)
 
     const resourceText = `${x.resource}: ${formatSignedNumber(amount)}`
-    const moneyText = `money: ${formatSignedNumber(Number(money.toFixed(2)))}`
+    const moneyText = `money: ${formatSignedNumber(money, 2)}`
 
     return `<div class="tx-row">
       <div class="tx-top">

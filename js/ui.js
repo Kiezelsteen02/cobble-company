@@ -7,6 +7,10 @@ import { getUser } from "./user.js"
 
 let messageContainer = null
 
+export function formatMoney(value){
+  return Number(value || 0).toFixed(2)
+}
+
 function ensureMessageContainer(){
   if (messageContainer) return messageContainer
 
@@ -51,7 +55,7 @@ export async function updateUI(){
   document.getElementById("player").innerText =
     u.username || "Unknown"
   document.getElementById("money").innerText =
-    u.money || 0
+    formatMoney(u.money)
 
   const prodWood = document.getElementById("prodWood")
   if (prodWood) prodWood.innerText = wood
