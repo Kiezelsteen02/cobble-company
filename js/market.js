@@ -10,6 +10,7 @@
 import { db } from "./firebase.js"
 import { getUser, updateUser } from "./user.js"
 import { updateUI, showMessage } from "./ui.js"
+import { logTransaction } from "./transactions.js"
 import { currentUser } from "./auth.js"
 
 import {
@@ -34,7 +35,7 @@ const ITEM_ICON = { wood: "🌲", stone: "🪨", planks: "📦" }
 export async function sellItem() {
   const item   = document.getElementById("sellItem").value
   const amount = parseInt(document.getElementById("sellAmount").value)
-  const price  = parseInt(document.getElementById("sellPrice").value)
+  const price  = Math.round(parseFloat(document.getElementById("sellPrice").value) * 100) / 100
 
   if (!amount || amount <= 0 || !price || price <= 0) {
     showMessage("Enter a valid amount and price.", "error")
@@ -62,6 +63,14 @@ export async function sellItem() {
   })
 
   updateUI()
+
+  await logTransaction({
+    type: "market_listed",
+    resource: item,
+    amount: -amount,
+    moneyChange: 0,
+    note: `Placed listing at $${price} each`
+  })
 }
 
 
@@ -78,6 +87,15 @@ export async function cancelListing(id, data) {
 
   await deleteDoc(doc(db, "market", id))
   updateUI()
+
+  await logTransaction({
+    type: "market_canceled",
+    resource: data.item,
+    amount: data.amount,
+    moneyChange: 0,
+    note: "Canceled own listing"
+  })
+
   showMessage(`Listing canceled. Refunded ${data.amount} ${data.item}.`, "info")
 }
 
@@ -96,6 +114,7 @@ export async function buy(id, data) {
 
   const buyerRef = doc(db, "users", currentUser)
   const marketRef = doc(db, "market", id)
+  const total = data.amount * data.price
 
   try {
     await runTransaction(db, async (tx) => {
@@ -141,6 +160,15 @@ export async function buy(id, data) {
   }
 
   updateUI()
+
+  await logTransaction({
+    type: "market_bought",
+    resource: data.item,
+    amount: data.amount,
+    moneyChange: -total,
+    note: `Bought from player market at $${data.price} each`
+  })
+
   showMessage(`Purchase complete: ${data.amount} ${data.item} bought.`, "info")
 }
 
@@ -179,6 +207,15 @@ export async function collectPendingPayments() {
 
   await updateUser(u)
   updateUI()
+
+  await logTransaction({
+    type: "market_payout",
+    resource: "money",
+    amount: 0,
+    moneyChange: collected,
+    note: "Collected sales payout"
+  })
+
   return collected
 }
 
@@ -213,7 +250,7 @@ export function loadMarket() {
         const info = document.createElement("span")
         info.innerHTML =
           `${icon} <strong>${o.amount}x ${o.item}</strong> &mdash; ` +
-          `$${o.price} each &nbsp;<em style="color:#aaa">(total: $${total})</em>` +
+          `$${o.price.toFixed(2)} each &nbsp;<em style="color:#aaa">(total: $${total.toFixed(2)})</em>` +
           `&nbsp;&nbsp;by <strong>${o.sellerName}</strong>` +
           (isOwn ? `&nbsp;<span style="color:#f0a030">(you)</span>` : "")
         el.appendChild(info)

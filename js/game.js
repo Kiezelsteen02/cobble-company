@@ -8,6 +8,7 @@ import { login, register } from "./auth.js"
 import { produceWood, produceStone, makePlanks } from "./production.js"
 import { sellItem, loadMarket, collectPendingPayments } from "./market.js"
 import { initNpcMarket, sellToNpcMarket, toggleNpcHistory } from "./npcMarket.js"
+import { initTransactionsUI, toggleTransactionsPanel } from "./transactions.js"
 import { changeUsername } from "./user.js"
 import { updateUI, showMessage } from "./ui.js"
 
@@ -29,8 +30,14 @@ async function startGame(){
   // ensure storage button is shown and panel hidden as well
   const storageBtn = document.getElementById("storageBtn");
   if (storageBtn) storageBtn.style.display = "block";
+  const transactionsBtn = document.getElementById("transactionsBtn");
+  if (transactionsBtn) transactionsBtn.style.display = "inline-block";
   const storagePanel = document.getElementById("storagePanel");
   if (storagePanel) storagePanel.style.display = "none";
+  const transactionsPanel = document.getElementById("transactionsPanel");
+  if (transactionsPanel) transactionsPanel.style.display = "none";
+  const transactionsOverlay = document.getElementById("transactionsOverlay");
+  if (transactionsOverlay) transactionsOverlay.style.display = "none";
 
   // attach change-name listener now that currentUser is guaranteed
   const changeBtn = document.getElementById("changeNameBtn");
@@ -83,6 +90,7 @@ async function startGame(){
   }
 
   await initNpcMarket()
+  initTransactionsUI()
   loadMarket()
 }
 
@@ -174,6 +182,7 @@ document.getElementById("plankBtn").addEventListener("click", function() {
 document.getElementById("sellBtn").addEventListener("click",sellItem)
 document.getElementById("sellNpcBtn").addEventListener("click",sellToNpcMarket)
 document.getElementById("npcHistoryBtn").addEventListener("click",toggleNpcHistory)
+document.getElementById("transactionsBtn").addEventListener("click",toggleTransactionsPanel)
 
 // user/settings listeners
 const settingsBtn = document.getElementById("settingsBtn");

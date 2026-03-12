@@ -5,6 +5,7 @@
 
 import { getUser, updateUser } from "./user.js"
 import { updateUI, showMessage } from "./ui.js"
+import { logTransaction } from "./transactions.js"
 
 // maximum total resources allowed in storage
 const STORAGE_LIMIT = 250;
@@ -29,6 +30,13 @@ export async function produceWood(){
 	u.wood = (u.wood||0) + 1;
 	await updateUser(u);
 	updateUI();
+	await logTransaction({
+		type: "produce_wood",
+		resource: "wood",
+		amount: 1,
+		moneyChange: 0,
+		note: "Chopped wood"
+	});
 }
 
 /**
@@ -48,6 +56,13 @@ export async function produceStone(){
 	u.stone = (u.stone||0) + 1;
 	await updateUser(u);
 	updateUI();
+	await logTransaction({
+		type: "produce_stone",
+		resource: "stone",
+		amount: 1,
+		moneyChange: 0,
+		note: "Mined stone"
+	});
 }
 
 /**
@@ -71,4 +86,18 @@ export async function makePlanks(){
 	u.planks = (u.planks||0) + 1;
 	await updateUser(u);
 	updateUI();
+	await logTransaction({
+		type: "craft_planks",
+		resource: "wood",
+		amount: -3,
+		moneyChange: 0,
+		note: "Used for crafting planks"
+	});
+	await logTransaction({
+		type: "craft_planks",
+		resource: "planks",
+		amount: 1,
+		moneyChange: 0,
+		note: "Crafted from wood"
+	});
 }

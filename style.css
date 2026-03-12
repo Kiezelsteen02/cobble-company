@@ -54,6 +54,7 @@ h1{margin-bottom:10px}
 .top-row{display:flex;gap:15px;align-items:stretch;flex-wrap:wrap}
 .top-row>.card{flex:1;min-width:280px}
 button{padding:8px 12px;border:none;border-radius:6px;background:#3fb950;color:white;cursor:pointer}
+#transactionsBtn{margin-top:8px}
 button.busy {
 	background: #888;
 	color: transparent;
@@ -147,6 +148,87 @@ button.cancel-btn:hover{background:#e74c3c}
   color:#fff;
   font-size:1.2em;
   cursor:pointer;
+}
+
+#transactionsOverlay{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  z-index:90;
+}
+
+#transactionsPanel{
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:360px;
+  max-width:92vw;
+  background:#1e1e1e;
+  padding:15px;
+  border-radius:12px;
+  z-index:100;
+}
+
+#transactionsPanel #closeTransactionsBtn{
+  position:absolute;
+  top:5px;
+  right:5px;
+  background:transparent;
+  border:none;
+  color:#fff;
+  font-size:1.2em;
+  cursor:pointer;
+}
+
+#transactionsPanel label{
+  display:block;
+  margin-top:8px;
+  margin-bottom:3px;
+  color:#ddd;
+  font-size:0.9em;
+}
+
+#transactionsBody{
+  margin-top:10px;
+  max-height:320px;
+  overflow:auto;
+  background:#2a2a2a;
+  border-radius:8px;
+  padding:8px;
+}
+
+.tx-row{
+  padding:8px 6px;
+  border-bottom:1px solid #3a3a3a;
+}
+
+.tx-row:last-child{
+  border-bottom:none;
+}
+
+.tx-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:0.9em;
+}
+
+.tx-meta{
+  color:#ddd;
+  margin-top:2px;
+  font-size:0.85em;
+}
+
+.tx-note{
+  color:#aaa;
+  margin-top:2px;
+  font-size:0.8em;
 }
 
 /* bottom-right in-game messages */

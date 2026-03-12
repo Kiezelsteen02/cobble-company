@@ -1,6 +1,7 @@
 import { db } from "./firebase.js"
 import { getUser, updateUser } from "./user.js"
 import { updateUI, showMessage } from "./ui.js"
+import { logTransaction } from "./transactions.js"
 
 import {
   collection,
@@ -131,7 +132,7 @@ async function maybeUpdateItemPrice(item){
   const ref = doc(db, "npc_market", item)
   const historyRef = doc(collection(db, "npc_market_history"))
 
-  const effectiveLastUpdate = await runTransaction(db, async (tx) => {
+  const result = await runTransaction(db, async (tx) => {
     const snap = await tx.get(ref)
     const now = Date.now()
 
@@ -148,17 +149,17 @@ async function maybeUpdateItemPrice(item){
         timestamp: now
       })
 
-      return now
+      return { lastUpdate: now, price: initialPrice }
     }
 
     const data = snap.data()
     const lastUpdateMs = getLastUpdateMs(data)
+    const currentPrice = Number(data.price ?? BASE_PRICES[item])
 
     if ((now - lastUpdateMs) < UPDATE_INTERVAL_MS) {
-      return lastUpdateMs
+      return { lastUpdate: lastUpdateMs, price: currentPrice }
     }
 
-    const currentPrice = Number(data.price ?? BASE_PRICES[item])
     let nextPrice = round2(currentPrice * randomFactor())
     if (nextPrice < 0.01) nextPrice = 0.01
 
@@ -173,11 +174,12 @@ async function maybeUpdateItemPrice(item){
       timestamp: now
     })
 
-    return now
+    return { lastUpdate: now, price: nextPrice }
   })
 
-  if (effectiveLastUpdate) {
-    npcLastUpdates[item] = effectiveLastUpdate
+  if (result) {
+    npcLastUpdates[item] = result.lastUpdate
+    npcPrices[item] = result.price
   }
 }
 
@@ -349,6 +351,14 @@ export async function sellToNpcMarket(){
 
   await updateUser(u)
   await updateUI()
+
+  await logTransaction({
+    type: "npc_sold",
+    resource: item,
+    amount: -amount,
+    moneyChange: payout,
+    note: `Sold to NPC at $${formatPrice(unitPrice)} each`
+  })
 
   showMessage(
     `Sold ${amount} ${item} to NPC for $${formatPrice(payout)} ($${formatPrice(unitPrice)} each).`,

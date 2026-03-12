@@ -46,6 +46,7 @@
 <p>Player: <span id="player"></span></p>
 <p>Money: $<span id="money"></span></p>
 <button id="storageBtn">Storage</button>
+<button id="transactionsBtn">Transactions</button>
 
 </div>
 
@@ -112,7 +113,7 @@
 </select>
 
 <input id="sellAmount" type="number" placeholder="amount">
-<input id="sellPrice" type="number" placeholder="price per item">
+<input id="sellPrice" type="number" step="0.01" min="0.01" placeholder="price per item">
 
 <button id="sellBtn">Place on the Market</button>
 <button id="sellNpcBtn">Sell to NPC Market</button>
@@ -149,6 +150,31 @@
   <p>🪨 Stone: <span id="storageStone">0</span></p>
   <p>📦 Planks: <span id="storagePlanks">0</span></p>
   <p>Total: <span id="storageTotal">0</span>/250</p>
+</div>
+
+<!-- overlay + transactions panel -->
+<div id="transactionsOverlay" style="display:none;"></div>
+<div id="transactionsPanel" class="card" style="display:none;">
+  <button id="closeTransactionsBtn" title="Close">✖️</button>
+  <h2>Transactions</h2>
+
+  <label for="txTimeFilter">Time</label>
+  <select id="txTimeFilter">
+    <option value="hour">Last hour</option>
+    <option value="day" selected>Last 24 hours</option>
+    <option value="week">Last week</option>
+  </select>
+
+  <label for="txResourceFilter">Resource</label>
+  <select id="txResourceFilter">
+    <option value="all" selected>All resources</option>
+    <option value="wood">Wood</option>
+    <option value="stone">Stone</option>
+    <option value="planks">Planks</option>
+    <option value="money">Money</option>
+  </select>
+
+  <div id="transactionsBody">No transactions loaded.</div>
 </div>
 
 </div>
