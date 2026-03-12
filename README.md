@@ -15,10 +15,11 @@ Firebase (Authentication + Firestore).
 - `auth.js` – handles login/registration and stores `currentUser` UID.
 - `user.js` – helper functions for reading/updating the current user
   document and renaming the user.
-- `ui.js` – updates on-screen values based on the fetched user object.
+- `ui.js` – updates on-screen values and shows in-game bottom-right
+  message toasts.
 - `production.js` – functions to chop wood, mine stone, and craft planks.
 - `market.js` – implements the player-to-player market with listings and
-  purchases.
+  purchases, listing cancel, and pending payment collection.
 - `game.js` – entry point; hooks UI controls to the above helpers and
   manages screen transitions.
 
@@ -31,6 +32,8 @@ style comments in the source.
 The game communicates with Firestore using simple collections:
 - `users/{uid}` stores player state (money, wood, stone, planks, username).
 - `market` stores active listings.
+- `pendingPayments` stores seller payouts created by buyers and collected
+  by sellers on next login.
 
 ### Firestore security rules
 
@@ -53,8 +56,16 @@ service cloud.firestore {
     }
 
     // market is public for authenticated users
-    match /market/{doc} {
-      allow read, write: if request.auth != null;
+    match /market/{docId} {
+      allow read, create, delete: if request.auth != null;
+    }
+
+    // buyers create pending-payment docs; only the recipient seller
+    // can read/delete those docs.
+    match /pendingPayments/{docId} {
+      allow create: if request.auth != null;
+      allow read, delete: if request.auth != null
+                           && request.auth.uid == resource.data.sellerUID;
     }
   }
 }
@@ -65,16 +76,17 @@ If you'd rather keep users private, remove the uniqueness query from
 browser cannot check names.  The code already handles permission errors
 by showing an alert and skipping the check.
 
-Once your rules are updated you should no longer see the console
-message and the new name will persist correctly.
+Once your rules are updated, market buys/cancels and username changes
+should work without permission errors.
 
 ## Development notes
 
 - The settings panel (⚙️) appears after logging in and lets the player
   change their username.
+- The old standalone resources card has been removed; resource counts are
+  shown in Production labels and in the Storage panel.
 - `game.js` includes basic countdown logic for production buttons.
-- Errors from Firestore (e.g. permission issues) are logged to the
-  console and optionally shown via alerts, but they no longer crash the
-  page.
+- User feedback now appears as in-game bottom-right messages instead of
+  browser alert popups.
 
 Feel free to explore, modify, and expand!

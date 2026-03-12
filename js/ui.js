@@ -44,24 +44,29 @@ export async function updateUI(){
   let u = await getUser()
   if(!u) return
 
+  const wood = u.wood || 0
+  const stone = u.stone || 0
+  const planks = u.planks || 0
+
   document.getElementById("player").innerText =
     u.username || "Unknown"
   document.getElementById("money").innerText =
     u.money || 0
-  document.getElementById("wood").innerText =
-    u.wood || 0
-  document.getElementById("stone").innerText =
-    u.stone || 0
-  document.getElementById("planks").innerText =
-    u.planks || 0
+
+  const prodWood = document.getElementById("prodWood")
+  if (prodWood) prodWood.innerText = wood
+  const prodStone = document.getElementById("prodStone")
+  if (prodStone) prodStone.innerText = stone
+  const prodPlanks = document.getElementById("prodPlanks")
+  if (prodPlanks) prodPlanks.innerText = planks
 
   // if storage panel exists, keep it in sync
-  const sw = document.getElementById("storageWood");
-  if (sw) {
-    sw.innerText = u.wood || 0;
-    document.getElementById("storageStone").innerText = u.stone || 0;
-    document.getElementById("storagePlanks").innerText = u.planks || 0;
-    const total = (u.wood||0) + (u.stone||0) + (u.planks||0);
-    document.getElementById("storageTotal").innerText = total;
+  const storageWood = document.getElementById("storageWood")
+  if (storageWood) {
+    storageWood.innerText = wood
+    document.getElementById("storageStone").innerText = stone
+    document.getElementById("storagePlanks").innerText = planks
+    const total = wood + stone + planks
+    document.getElementById("storageTotal").innerText = total
   }
 }

@@ -40,19 +40,8 @@ async function startGame(){
 
   // wire storage panel toggles
   if (storageBtn) {
-    storageBtn.addEventListener("click", () => {
-      // copy current resource values & show panel + overlay
-      document.getElementById("storageWood").textContent =
-        document.getElementById("wood").textContent;
-      document.getElementById("storageStone").textContent =
-        document.getElementById("stone").textContent;
-      document.getElementById("storagePlanks").textContent =
-        document.getElementById("planks").textContent;
-      document.getElementById("storageTotal").textContent =
-        Number(document.getElementById("wood").textContent || 0) +
-        Number(document.getElementById("stone").textContent || 0) +
-        Number(document.getElementById("planks").textContent || 0);
-
+    storageBtn.addEventListener("click", async () => {
+      await updateUI()
       const panel = document.getElementById("storagePanel");
       if (panel) panel.style.display = "block";
       const overlay = document.getElementById("storageOverlay");
@@ -182,12 +171,6 @@ document.getElementById("plankBtn").addEventListener("click", function() {
 document.getElementById("sellBtn").addEventListener("click",sellItem)
 
 // user/settings listeners
-const changeBtn = document.getElementById("changeNameBtn");
-if (changeBtn) {
-  console.log("attaching changeNameBtn listener");
-  changeBtn.addEventListener("click", changeUsername);
-}
-
 const settingsBtn = document.getElementById("settingsBtn");
 const closeSettingsBtn = document.getElementById("closeSettingsBtn");
 if (settingsBtn) {
