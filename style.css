@@ -199,3 +199,34 @@ button.cancel-btn:hover{background:#e74c3c}
 #npcCountdown.countdown-danger{
   color:#e74c3c;
 }
+
+#npcHistoryPanel{
+  background:#2a2a2a;
+  border-radius:8px;
+  padding:10px;
+}
+
+#npcHistoryPanel h3{
+  margin:0 0 8px 0;
+  font-size:0.95em;
+}
+
+#npcHistoryBody{
+  max-height:220px;
+  overflow:auto;
+  font-size:0.9em;
+}
+
+.npc-history-item{
+  margin-bottom:10px;
+}
+
+.npc-history-title{
+  font-weight:700;
+  margin-bottom:4px;
+}
+
+.npc-history-row{
+  color:#ddd;
+  margin:2px 0;
+}

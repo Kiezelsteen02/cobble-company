@@ -7,7 +7,7 @@
 import { login, register } from "./auth.js"
 import { produceWood, produceStone, makePlanks } from "./production.js"
 import { sellItem, loadMarket, collectPendingPayments } from "./market.js"
-import { initNpcMarket, sellToNpcMarket } from "./npcMarket.js"
+import { initNpcMarket, sellToNpcMarket, toggleNpcHistory } from "./npcMarket.js"
 import { changeUsername } from "./user.js"
 import { updateUI, showMessage } from "./ui.js"
 
@@ -173,6 +173,7 @@ document.getElementById("plankBtn").addEventListener("click", function() {
 
 document.getElementById("sellBtn").addEventListener("click",sellItem)
 document.getElementById("sellNpcBtn").addEventListener("click",sellToNpcMarket)
+document.getElementById("npcHistoryBtn").addEventListener("click",toggleNpcHistory)
 
 // user/settings listeners
 const settingsBtn = document.getElementById("settingsBtn");

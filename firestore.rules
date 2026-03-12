@@ -30,5 +30,10 @@ service cloud.firestore {
       allow read, write: if request.auth != null
                          && (itemId == "wood" || itemId == "stone" || itemId == "planks");
     }
+
+    // NPC price history log (last 24h shown in client UI).
+    match /npc_market_history/{docId} {
+      allow read, write: if request.auth != null;
+    }
   }
 }
