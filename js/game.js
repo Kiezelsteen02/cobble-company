@@ -5,13 +5,12 @@
 // handles the transition from the login screen to the main game screen.
 
 import { login, register } from "./auth.js"
-import { produceWood, produceStone, makePlanks } from "./production.js"
 import { sellItem, loadMarket, collectPendingPayments } from "./market.js"
 import { initNpcMarket, sellToNpcMarket, toggleNpcHistory } from "./npcMarket.js"
 import { initTransactionsUI, toggleTransactionsPanel } from "./transactions.js"
 import { changeUsername } from "./user.js"
 import { updateUI, showMessage, formatMoney } from "./ui.js"
-import { initCityMap, startCityMapProduction } from "./cityMap.js"
+import { initCityMap, startCityMapProduction, toggleBuildingsPanel, toggleGovernmentPanel } from "./cityMap.js"
 
 /**
  * Called after a successful login/registration.  Hides the auth panel,
@@ -33,12 +32,24 @@ async function startGame(){
   if (storageBtn) storageBtn.style.display = "block";
   const transactionsBtn = document.getElementById("transactionsBtn");
   if (transactionsBtn) transactionsBtn.style.display = "inline-block";
+  const buildingsBtn = document.getElementById("buildingsBtn");
+  if (buildingsBtn) buildingsBtn.style.display = "inline-block";
+  const governmentBtn = document.getElementById("governmentBtn");
+  if (governmentBtn) governmentBtn.style.display = "inline-block";
   const storagePanel = document.getElementById("storagePanel");
   if (storagePanel) storagePanel.style.display = "none";
   const transactionsPanel = document.getElementById("transactionsPanel");
   if (transactionsPanel) transactionsPanel.style.display = "none";
   const transactionsOverlay = document.getElementById("transactionsOverlay");
   if (transactionsOverlay) transactionsOverlay.style.display = "none";
+  const buildingsPanel = document.getElementById("buildingsPanel");
+  if (buildingsPanel) buildingsPanel.style.display = "none";
+  const buildingsOverlay = document.getElementById("buildingsOverlay");
+  if (buildingsOverlay) buildingsOverlay.style.display = "none";
+  const governmentPanel = document.getElementById("governmentPanel");
+  if (governmentPanel) governmentPanel.style.display = "none";
+  const governmentOverlay = document.getElementById("governmentOverlay");
+  if (governmentOverlay) governmentOverlay.style.display = "none";
 
   // attach change-name listener now that currentUser is guaranteed
   const changeBtn = document.getElementById("changeNameBtn");
@@ -110,82 +121,12 @@ document.getElementById("registerBtn").addEventListener("click", async ()=>{
   startGame()
 })
 
-
-
-document.getElementById("woodBtn").addEventListener("click", function() {
-	const btn = document.getElementById("woodBtn");
-		btn.disabled = true;
-		btn.classList.add("busy");
-		let seconds = 3;
-		let countdownSpan = document.createElement("span");
-		countdownSpan.className = "countdown";
-		countdownSpan.textContent = seconds;
-		btn.appendChild(countdownSpan);
-		let interval = setInterval(() => {
-			seconds--;
-			countdownSpan.textContent = seconds;
-			if (seconds <= 0) {
-				clearInterval(interval);
-			}
-		}, 1000);
-		setTimeout(() => {
-			btn.disabled = false;
-			btn.classList.remove("busy");
-			btn.removeChild(countdownSpan);
-			produceWood();
-		}, 3000);
-});
-document.getElementById("stoneBtn").addEventListener("click", function() {
-	const btn = document.getElementById("stoneBtn");
-		btn.disabled = true;
-		btn.classList.add("busy");
-		let seconds = 5;
-		let countdownSpan = document.createElement("span");
-		countdownSpan.className = "countdown";
-		countdownSpan.textContent = seconds;
-		btn.appendChild(countdownSpan);
-		let interval = setInterval(() => {
-			seconds--;
-			countdownSpan.textContent = seconds;
-			if (seconds <= 0) {
-				clearInterval(interval);
-			}
-		}, 1000);
-		setTimeout(() => {
-			btn.disabled = false;
-			btn.classList.remove("busy");
-			btn.removeChild(countdownSpan);
-			produceStone();
-		}, 5000);
-});
-document.getElementById("plankBtn").addEventListener("click", function() {
-	const btn = document.getElementById("plankBtn");
-		btn.disabled = true;
-		btn.classList.add("busy");
-		let seconds = 12;
-		let countdownSpan = document.createElement("span");
-		countdownSpan.className = "countdown";
-		countdownSpan.textContent = seconds;
-		btn.appendChild(countdownSpan);
-		let interval = setInterval(() => {
-			seconds--;
-			countdownSpan.textContent = seconds;
-			if (seconds <= 0) {
-				clearInterval(interval);
-			}
-		}, 1000);
-		setTimeout(() => {
-			btn.disabled = false;
-			btn.classList.remove("busy");
-			btn.removeChild(countdownSpan);
-			makePlanks();
-		}, 12000);
-});
-
 document.getElementById("sellBtn").addEventListener("click",sellItem)
 document.getElementById("sellNpcBtn").addEventListener("click",sellToNpcMarket)
 document.getElementById("npcHistoryBtn").addEventListener("click",toggleNpcHistory)
 document.getElementById("transactionsBtn").addEventListener("click",toggleTransactionsPanel)
+document.getElementById("buildingsBtn").addEventListener("click",toggleBuildingsPanel)
+document.getElementById("governmentBtn").addEventListener("click",toggleGovernmentPanel)
 
 const sellPriceInput = document.getElementById("sellPrice")
 if (sellPriceInput) {

@@ -47,11 +47,53 @@
 	margin-bottom: 6px;
 	color: #fff;
 }
+.production-rate {
+  color: #cfcfcf;
+  font-size: 0.9em;
+}
+.city-map-layout{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.city-map-board{
+  display:flex;
+  align-items:stretch;
+  gap:6px;
+}
+.city-map-left-axis{
+  width:28px;
+  display:grid;
+  grid-template-rows:repeat(20, minmax(0, 1fr));
+  gap:4px;
+}
 .city-map-grid{
   display:grid;
-  grid-template-columns:repeat(10, minmax(0, 1fr));
+  grid-template-columns:repeat(20, minmax(0, 1fr));
   gap:4px;
-  max-width:520px;
+  width:100%;
+  max-width:800px;
+}
+.city-map-top-row{
+  display:flex;
+  gap:6px;
+}
+.city-map-axis-spacer{
+  width:28px;
+}
+.city-map-top-axis{
+  display:grid;
+  grid-template-columns:repeat(20, minmax(0, 1fr));
+  gap:4px;
+  width:100%;
+  max-width:800px;
+}
+.city-map-axis-label{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#9ca3af;
+  font-size:0.7em;
 }
 .city-map-controls{
   display:flex;
@@ -104,6 +146,11 @@
 .city-map-tile.tile-sawmill{
   background:#3a2f24;
   border-color:#6a4d2f;
+}
+.city-map-tile.tile-city-building{
+  background:#2f2a44;
+  border-color:#7c6bc5;
+  cursor:pointer;
 }
 .city-map-tile.tile-own{
   box-shadow:0 0 0 2px #3fb950 inset;
@@ -251,6 +298,176 @@ button.cancel-btn:hover{background:#e74c3c}
   color:#fff;
   font-size:1.2em;
   cursor:pointer;
+}
+
+#buildingsOverlay{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  z-index:90;
+}
+
+#buildingsPanel{
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:460px;
+  max-width:94vw;
+  background:#1e1e1e;
+  padding:15px;
+  border-radius:12px;
+  z-index:100;
+}
+
+#buildingsPanel #closeBuildingsBtn{
+  position:absolute;
+  top:5px;
+  right:5px;
+  background:transparent;
+  border:none;
+  color:#fff;
+  font-size:1.2em;
+  cursor:pointer;
+}
+
+#buildingsListBody{
+  margin-top:8px;
+  max-height:320px;
+  overflow:auto;
+  background:#2a2a2a;
+  border-radius:8px;
+  padding:8px;
+}
+
+#governmentOverlay{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  z-index:90;
+}
+
+#governmentPanel{
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:460px;
+  max-width:94vw;
+  background:#1e1e1e;
+  padding:15px;
+  border-radius:12px;
+  z-index:100;
+}
+
+#governmentPanel #closeGovernmentBtn{
+  position:absolute;
+  top:5px;
+  right:5px;
+  background:transparent;
+  border:none;
+  color:#fff;
+  font-size:1.2em;
+  cursor:pointer;
+}
+
+#governmentListBody{
+  margin-top:8px;
+  max-height:320px;
+  overflow:auto;
+  background:#2a2a2a;
+  border-radius:8px;
+  padding:8px;
+}
+
+.government-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:8px 6px;
+  border-bottom:1px solid #3a3a3a;
+}
+
+.government-row:last-child{
+  border-bottom:none;
+}
+
+.government-meta{
+  color:#ddd;
+  font-size:0.9em;
+}
+
+.building-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:8px 6px;
+  border-bottom:1px solid #3a3a3a;
+}
+
+.building-row:last-child{
+  border-bottom:none;
+}
+
+.building-meta{
+  color:#ddd;
+  font-size:0.9em;
+}
+
+#buildingInfoOverlay{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  z-index:90;
+}
+
+#buildingInfoPanel{
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:320px;
+  max-width:92vw;
+  background:#1e1e1e;
+  padding:15px;
+  border-radius:12px;
+  z-index:100;
+}
+
+#buildingInfoPanel #closeBuildingInfoBtn{
+  position:absolute;
+  top:5px;
+  right:5px;
+  background:transparent;
+  border:none;
+  color:#fff;
+  font-size:1.2em;
+  cursor:pointer;
+}
+
+#buildingInfoPanel p{
+  margin:8px 0;
+}
+
+#toggleBuildingProductionBtn{
+  margin-top:10px;
 }
 
 #transactionsPanel label{
